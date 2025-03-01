@@ -3,7 +3,7 @@ const Getbook = require('./src/routes/GetBook');
 const multer = require("multer")
 const fs = require("fs");
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 const path = require("path")
 
 const cors = require('cors');
