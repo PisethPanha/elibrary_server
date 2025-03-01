@@ -2,6 +2,7 @@ const express = require('express');
 const Getbook = require('./src/routes/GetBook');
 const multer = require("multer")
 const fs = require("fs");
+const db = require("./src/database/database.js").connection;
 const app = express();
 const port = 3000;
 const path = require("path")
@@ -10,6 +11,13 @@ const cors = require('cors');
 
 app.use(cors());
 app.use(express.json());
+
+setInterval(() => {
+  db.query("SELECT 1",(err, result) => {
+    err ? console.log(err) : console.log(result);
+  })
+}, 50000)
+
 Getbook.uploadPDFRoute(app);
 Getbook.uploadPDFTestRoute(app)
 Getbook.GetMostViewRoute(app);
