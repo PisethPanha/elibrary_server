@@ -84,7 +84,7 @@ function getEndIdController(req, res) {
 }
 function getBookAsTypeController(req, res) {
     const { keyword, catagory, language } = req.query
-    const query = `SELECT * FROM book WHERE type='${catagory}'`;
+    const query = `SELECT * FROM book WHERE type LIKE '${catagory}%'`;
     db.connection.query(query, (err, result) => {
         err ? res.send(err) : res.json(result);
     })
