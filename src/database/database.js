@@ -3,11 +3,11 @@ const mysql = require('mysql2')
 
 
     const connection = mysql.createConnection({
-        host: "bqpchigzuhyeltchb2ff-mysql.services.clever-cloud.com" ,
-        user: "uazqoodj3xoeyoyl",
-        password: "hc2YrowbYEZEZp0s5wv",
-        database: "bqpchigzuhyeltchb2ff",
-        port: "20600"
+        host: "hopper.proxy.rlwy.net" ,
+        user: "root",
+        password: "DzAbEaJsXtCtUruossPMrTRRdifrmWza",
+        database: "railway",
+        port: "54123"
         
     })
     module.exports = {connection}
