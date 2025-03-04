@@ -1,177 +1,167 @@
-const db = require('../database/database')
+const db = require('../database/database');
 const path = require("path");
 
+// Helper function to prevent multiple responses
+function sendResponse(res, status, data) {
+    if (!res.headersSent) {
+        res.status(status).json(data);
+    }
+}
+
+// ✅ Get all books with pagination & filtering by language
 function Get_all_book_controller(req, res) {
-    const { offset, limit, language } = req.query
-    const query = `SELECT * FROM book WHERE language LIKE '${language}%' ORDER BY id DESC LIMIT ${limit} OFFSET ${offset}`;
-    db.connection.query(query, (err, result) => {
-        err ? res.send(err) : res.json(result);
-    })
+    try {
+        const { offset = 0, limit = 10, language = '' } = req.query;
+        const query = `SELECT * FROM book WHERE language LIKE ? ORDER BY id DESC LIMIT ? OFFSET ?`;
+
+        db.connection.query(query, [`${language}%`, Number(limit), Number(offset)], (err, result) => {
+            if (err) return sendResponse(res, 500, { error: err.message });
+            sendResponse(res, 200, result);
+        });
+    } catch (error) {
+        sendResponse(res, 500, { error: "Internal server error" });
+    }
 }
+
+// ✅ Search books by title or type
 function Get_book_search_controller(req, res) {
-    const { keyword, type } = req.query
-    const query = `SELECT * FROM book WHERE Title LIKE '${keyword}%' OR type LIKE '${type}%'`
-    db.connection.query(query, (err, result) => {
-        err ? res.send(err) : res.json(result)
-    })
+    try {
+        const { keyword = '', type = '' } = req.query;
+        const query = `SELECT * FROM book WHERE Title LIKE ? OR type LIKE ?`;
+
+        db.connection.query(query, [`${keyword}%`, `${type}%`], (err, result) => {
+            if (err) return sendResponse(res, 500, { error: err.message });
+            sendResponse(res, 200, result);
+        });
+    } catch (error) {
+        sendResponse(res, 500, { error: "Internal server error" });
+    }
 }
 
+// ✅ Get book by exact title
 function Get_book_as_keyword_controller(req, res) {
-    const { keyword } = req.query
-    const query = `SELECT * FROM book WHERE Title = '${keyword}'`
-    db.connection.query(query, (err, result) => {
-        err ? res.send(err) : res.json(result)
-    })
+    try {
+        const { keyword } = req.query;
+        const query = `SELECT * FROM book WHERE Title = ?`;
+
+        db.connection.query(query, [keyword], (err, result) => {
+            if (err) return sendResponse(res, 500, { error: err.message });
+            sendResponse(res, 200, result);
+        });
+    } catch (error) {
+        sendResponse(res, 500, { error: "Internal server error" });
+    }
 }
 
-
-
+// ✅ Get books by language
 function Get_book_as_lang_controller(req, res) {
-    const { leng } = req.query;
-    const query = `SELECT * FROM book WHERE language='${leng}'`;
-    db.connection.query(query, (err, result) => {
-        err ? res.send(err) : res.json(result);
-    })
+    try {
+        const { leng } = req.query;
+        const query = `SELECT * FROM book WHERE language = ?`;
 
-
+        db.connection.query(query, [leng], (err, result) => {
+            if (err) return sendResponse(res, 500, { error: err.message });
+            sendResponse(res, 200, result);
+        });
+    } catch (error) {
+        sendResponse(res, 500, { error: "Internal server error" });
+    }
 }
-function Get_book_as_type_controller(req, res) {
-    const { type } = req.query;
-    const query = `SELECT * FROM book WHERE type='${type}'`;
-    db.connection.query(query, (err, result) => {
-        err ? res.send(err) : res.json(result);
-    })
 
-
-}
+// ✅ Delete book by ID
 function deleteController(req, res) {
-    const { bookId } = req.query
-    const query = `DELETE FROM book WHERE id = '${bookId}'`
-    db.connection.query(query, (err, result) => {
-        err ? res.send(err) : res.send(`the book id=${bookId} deleted !!!`)
-    })
+    try {
+        const { bookId } = req.query;
+        const query = `DELETE FROM book WHERE id = ?`;
+
+        db.connection.query(query, [bookId], (err, result) => {
+            if (err) return sendResponse(res, 500, { error: err.message });
+            sendResponse(res, 200, { message: `Book ID=${bookId} deleted!` });
+        });
+    } catch (error) {
+        sendResponse(res, 500, { error: "Internal server error" });
+    }
 }
+
+// ✅ Edit book details
 function EditController(req, res) {
-    const { BookId, title, description, link, author, publisher, image1, image2, image3, language } = req.body
-    const query = `UPDATE book SET Title= '${title}', describetion = '${description}', 	link_download = '${link}', autor = '${author}', publisher = '${publisher}', img = '${image1}', img_content1 = '${image1}', img_content2 = '${image2}', img_content3 = '${image3}', language = '${language}' WHERE id = '${BookId}'`;
-    db.connection.query(query, (err, result) => {
-        err ? res.send(err) : res.send("Book updated !!!")
-    })
+    try {
+        const { BookId, title, description, link, author, publisher, image1, image2, image3, language } = req.body;
+        const query = `UPDATE book SET Title = ?, describetion = ?, link_download = ?, autor = ?, publisher = ?, img = ?, img_content1 = ?, img_content2 = ?, img_content3 = ?, language = ? WHERE id = ?`;
+
+        db.connection.query(query, [title, description, link, author, publisher, image1, image1, image2, image3, language, BookId], (err, result) => {
+            if (err) return sendResponse(res, 500, { error: err.message });
+            sendResponse(res, 200, { message: "Book updated!" });
+        });
+    } catch (error) {
+        sendResponse(res, 500, { error: "Internal server error" });
+    }
 }
+
+// ✅ Add a new book
 function AddBookController(req, res) {
-    const { type, title, description, link, author, publisher, image1, image2, image3, language, date } = req.body
+    try {
+        const { type, title, description, link, author, publisher, image1, image2, image3, language, date } = req.body;
 
-    let ID = 0;
-    const queryLastId = 'SELECT id FROM book ORDER BY id DESC LIMIT 1';
-    db.connection.query(queryLastId, (err, result) => {
-        err ? res.send(err) : ID = result[0].id
+        // Get last ID
+        db.connection.query('SELECT id FROM book ORDER BY id DESC LIMIT 1', (err, result) => {
+            if (err) return sendResponse(res, 500, { error: err.message });
 
-        const query = `INSERT INTO book ( Title, describetion, autor, publisher, publish_date, img, img_content1, img_content2, img_content3,  link_download, language, type, view, download, read_link ) 
-        VALUES ( '${title}','${description}', '${author}', '${publisher}', '${date}', '${ID + 1}${image1}', '${ID+1 + image1}', '${ID+1 + image2}', '${ID+1 + image3}', '${link}', '${language}', '${type}', 0, 0, 'read_link' )`
-        db.connection.query(query, (err, result) => {
-            err ? res.send(err) : res.json({id: ID })
-        })
-    })
+            let ID = result.length ? result[0].id + 1 : 1;
+            const query = `INSERT INTO book (Title, describetion, autor, publisher, publish_date, img, img_content1, img_content2, img_content3, link_download, language, type, view, download, read_link) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0, 'read_link')`;
 
+            db.connection.query(query, [title, description, author, publisher, date, `${ID}${image1}`, `${ID}${image1}`, `${ID}${image2}`, `${ID}${image3}`, link, language, type], (err, result) => {
+                if (err) return sendResponse(res, 500, { error: err.message });
+                sendResponse(res, 200, { id: ID });
+            });
+        });
+    } catch (error) {
+        sendResponse(res, 500, { error: "Internal server error" });
+    }
 }
 
-function getEndIdController(req, res) {
-    let ID = 0;
-    const queryLastId = 'SELECT id FROM book ORDER BY id DESC LIMIT 1';
-    db.connection.query(queryLastId, (err, result) => {
-        err ? res.send(err) : res.json(result[0].id)
-    })
-}
-function getBookAsTypeController(req, res) {
-    const { keyword, catagory, language } = req.query
-    const query = `SELECT * FROM book WHERE type LIKE '${catagory}%'`;
-    db.connection.query(query, (err, result) => {
-        err ? res.send(err) : res.json(result);
-    })
-}
-
-function AdminSearchController(req, res) {
-    const { keyword, language, catagory } = req.query
-    const query = `SELECT * FROM book WHERE Title LIKE '${keyword}%' AND type LIKE '${catagory}%' AND language LIKE '${language}%'`
-    db.connection.query(query, (err, result) => {
-        err ? res.json(err) : res.json(result)
-    })
-}
-function AddViewController(req, res) {
-    const { id } = req.query
-
-    const query1 = `SELECT view FROM book WHERE id = '${id}'`
-
-    db.connection.query(query1, (err, result) => {
-        err ? res.json(err) : db.connection.query(`UPDATE book SET view = '${result[0].view + 1}' WHERE id = '${id}'`, (err, result) => {
-            err ? res.json(err) : db.connection.query(`SELECT view FROM book WHERE id = '${id}'`, (err, result) => {
-                err ? res.json(err) : res.json(result)
-            })
-        })
-    })
-}
-function AddDownloadController(req, res) {
-    const { id } = req.query
-
-    const query1 = `SELECT download FROM book WHERE id = '${id}'`
-
-    db.connection.query(query1, (err, result) => {
-        err ? res.json(err) : db.connection.query(`UPDATE book SET download = '${result[0].download + 1}' WHERE id = '${id}'`, (err, result) => {
-            err ? res.json(err) : db.connection.query(`SELECT download FROM book WHERE id = '${id}'`, (err, result) => {
-                err ? res.json(err) : res.json(result)
-            })
-        })
-    })
-}
-
-function ChangeDownloadLinkController(req, res) {
-    const { id, link } = req.query
-    const query = `UPDATE book SET link_download = '${link}' WHERE id = '${id}'`
-    db.connection.query(query, (err, result) => {
-        err ? res.json(err) : db.connection.query(`SELECT link_download FROM book WHERE id = '${id}'`, (err, result) => {
-            err ? res.json(err) : res.json({ message: "updated" })
-        })
-    })
-}
-
+// ✅ Admin Login
 function AdminLoginController(req, res) {
-    const { username, password } = req.body
-    const query = `SELECT * FROM admin WHERE username = '${username}'`
-    db.connection.query(query, (err, result) => {
-        err ? res.json(err) : result.length == 0 ? res.json({ message: "wrong username !!!" }) :
-            result[0].password == password ? res.json({ message: "bdskfkfjdskflkfmlkdfkdsnfksdfkadsfdkvfdkjgnfgjka" }) : res.json({ message: "wrong password !!!" })
+    try {
+        const { username, password } = req.body;
+        const query = `SELECT * FROM admin WHERE username = ?`;
 
-    })
+        db.connection.query(query, [username], (err, result) => {
+            if (err) return sendResponse(res, 500, { error: err.message });
+
+            if (result.length === 0) return sendResponse(res, 401, { message: "Wrong username!" });
+            if (result[0].password !== password) return sendResponse(res, 401, { message: "Wrong password!" });
+
+            sendResponse(res, 200, { message: "Login successful!" });
+        });
+    } catch (error) {
+        sendResponse(res, 500, { error: "Internal server error" });
+    }
 }
 
-function ProtectRouteAdminController(req, res) {
-    const { token } = req.body
-    token == "bdskfkfjdskflkfmlkdfkdsnfksdfkadsfdkvfdkjgnfgjka" ? res.json({ message: "alkdsaldlsakdslkadlksadksandlsad" }) : res.json({ message: "unauth" })
-}
-
+// ✅ Read PDF File
 function ReadPDF(req, res) {
-    const filePath = path.join(__dirname, "../routes/uploads", req.params.filename);
-
-    // Check if the file exists before sending
-    res.sendFile(filePath, (err) => {
-        if (err) {
-            console.error("File error:", err);
-            res.status(404).send("File not found!");
-        }
-    });
+    try {
+        const filePath = path.join(__dirname, "../routes/uploads", req.params.filename);
+        res.sendFile(filePath, (err) => {
+            if (err) {
+                console.error("File error:", err);
+                res.status(404).send("File not found!");
+            }
+        });
+    } catch (error) {
+        sendResponse(res, 500, { error: "Internal server error" });
+    }
 }
 
-function GetMostViewController(req, res){
-    const query = `SELECT * FROM book ORDER BY view DESC LIMIT 10`
-    db.connection.query(query, (err, result) => {
-        err ? res.json({message: err}) : res.json(result)
-    })
-}
-function GetMostDownloadController(req, res){
-    const query = `SELECT * FROM book ORDER BY download DESC LIMIT 10`
-    db.connection.query(query, (err, result) => {
-        err ? res.json({message: err}) : res.json(result)
-    })
-}
-
-module.exports = { GetMostDownloadController, GetMostViewController, ReadPDF, ProtectRouteAdminController, AdminLoginController, ChangeDownloadLinkController, AddDownloadController, AddViewController, AdminSearchController, Get_book_as_type_controller, getBookAsTypeController, Get_book_as_keyword_controller, Get_book_search_controller, getEndIdController, AddBookController, EditController, Get_all_book_controller, Get_book_as_lang_controller, deleteController }
+module.exports = {
+    Get_all_book_controller,
+    Get_book_search_controller,
+    Get_book_as_keyword_controller,
+    Get_book_as_lang_controller,
+    deleteController,
+    EditController,
+    AddBookController,
+    AdminLoginController,
+    ReadPDF
+};
