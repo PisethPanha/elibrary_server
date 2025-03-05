@@ -92,7 +92,7 @@ function getBookAsTypeController(req, res) {
 
 function AdminSearchController(req, res) {
     const { keyword, language, catagory } = req.query
-    const query = `SELECT * FROM book WHERE Title LIKE '${keyword}%' AND type LIKE '${catagory}%' AND language LIKE '${language}%' OR '$%{keyword}%' AND type LIKE '${catagory}%' AND language LIKE '${language}%' `
+    const query = `SELECT * FROM book WHERE Title LIKE '${keyword}%' AND type LIKE '${catagory}%' AND language LIKE '${language}%' OR Title LIKE '$%{keyword}%' AND type LIKE '${catagory}%' AND language LIKE '${language}%' `
     db.connection.query(query, (err, result) => {
         err ? res.json(err) : res.json(result)
     })
