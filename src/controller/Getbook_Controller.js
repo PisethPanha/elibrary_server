@@ -10,7 +10,7 @@ function Get_all_book_controller(req, res) {
 }
 function Get_book_search_controller(req, res) {
     const { keyword, type } = req.query
-    const query = `SELECT * FROM book WHERE MATCH(Title, type, describetion) AGAINST ('${keyword}' IN NATURAL LANGUAGE MODE) OR type LIKE '${type}%' OR Title LIKE '${keyword}'`
+    const query = `SELECT * FROM book WHERE MATCH(Title, type, describetion) AGAINST ('${keyword}' IN NATURAL LANGUAGE MODE) OR type LIKE '${type}%' OR Title LIKE '${keyword}%'`
     db.connection.query(query, (err, result) => {
         err ? res.send(err) : res.json(result)
     })
