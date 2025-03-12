@@ -66,8 +66,8 @@ function AddBookController(req, res) {
     db.connection.query(queryLastId, (err, result) => {
         err ? res.send(err) : ID = result[0].id
 
-        const query = `INSERT INTO book ( Title, describetion, autor, publisher, publish_date, img, img_content1, img_content2, img_content3,  link_download, language, type, view, download, read_link ) 
-        VALUES ( '${title}','${description}', '${author}', '${publisher}', '${date}', '${ID + 1}${image1}', '${ID+1 + image1}', '${ID+1 + image2}', '${ID+1 + image3}', '${link}', '${language}', '${type}', 0, 0, 'read_link' )`
+        const query = `INSERT INTO book ( Title, describetion, autor, publisher, publish_date, img, img_content1, img_content2, img_content3,  link_download, language, type, view, download ) 
+        VALUES ( '${title}','${description}', '${author}', '${publisher}', '${date}', '${ID + 1}${image1}', '${ID+1 + image1}', '${ID+1 + image2}', '${ID+1 + image3}', '${link}', '${language}', '${type}', 0, 0 )`
         db.connection.query(query, (err, result) => {
             err ? res.send(err) : res.json({id: ID })
         })
