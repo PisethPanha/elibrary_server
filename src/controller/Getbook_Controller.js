@@ -10,7 +10,7 @@ function Get_all_book_controller(req, res) {
 }
 function Get_book_search_controller(req, res) {
     const { keyword, type } = req.query
-    const query = `SELECT * FROM book WHERE type LIKE '${type}%' OR Title LIKE '${keyword}%' OR Title LIKE '%${keyword}%' OR describetion LIKE '%${keyword}%'`
+    const query = `SELECT * FROM book WHERE type LIKE '${type}%' AND status = 'true' OR Title LIKE '${keyword}%' AND status = 'true' OR Title LIKE '%${keyword}%' AND status = 'true' OR describetion LIKE '%${keyword}%' AND status = 'true'`
     db.connection.query(query, (err, result) => {
         err ? res.send(err) : res.json(result)
     })
@@ -18,7 +18,7 @@ function Get_book_search_controller(req, res) {
 
 function Get_book_as_keyword_controller(req, res) {
     const { keyword } = req.query
-    const query = `SELECT * FROM book WHERE Title = '${keyword}'`
+    const query = `SELECT * FROM book WHERE Title = '${keyword}' AND status = 'true'`
     db.connection.query(query, (err, result) => {
         err ? res.send(err) : res.json(result)
     })
@@ -28,7 +28,7 @@ function Get_book_as_keyword_controller(req, res) {
 
 function Get_book_as_lang_controller(req, res) {
     const { leng } = req.query;
-    const query = `SELECT * FROM book WHERE language='${leng}'`;
+    const query = `SELECT * FROM book WHERE language='${leng}' AND status = 'true'`;
     db.connection.query(query, (err, result) => {
         err ? res.send(err) : res.json(result);
     })
@@ -37,7 +37,7 @@ function Get_book_as_lang_controller(req, res) {
 }
 function Get_book_as_type_controller(req, res) {
     const { type } = req.query;
-    const query = `SELECT * FROM book WHERE type='${type}'`;
+    const query = `SELECT * FROM book WHERE type='${type}' AND status = 'true'`;
     db.connection.query(query, (err, result) => {
         err ? res.send(err) : res.json(result);
     })
@@ -59,15 +59,15 @@ function EditController(req, res) {
     })
 }
 function AddBookController(req, res) {
-    const { type, title, description, link, author, publisher, image1, image2, image3, language, date } = req.body
+    const { status, type, title, description, link, author, publisher, image1, image2, image3, language, date } = req.body
 
     let ID = 0;
     const queryLastId = 'SELECT id FROM book ORDER BY id DESC LIMIT 1';
     db.connection.query(queryLastId, (err, result) => {
         err ? res.send(err) : ID = result[0].id
 
-        const query = `INSERT INTO book ( Title, describetion, autor, publisher, publish_date, img, img_content1, img_content2, img_content3,  link_download, language, type, view, download ) 
-        VALUES ( '${title}','${description}', '${author}', '${publisher}', '${date}', '${ID + 1}${image1}', '${ID+1 + image1}', '${ID+1 + image2}', '${ID+1 + image3}', '${link}', '${language}', '${type}', 0, 0 )`
+        const query = `INSERT INTO book ( Title, describetion, autor, publisher, publish_date, img, img_content1, img_content2, img_content3,  link_download, language, type, view, download, status ) 
+        VALUES ( '${title}','${description}', '${author}', '${publisher}', '${date}', '${ID + 1}${image1}', '${ID+1 + image1}', '${ID+1 + image2}', '${ID+1 + image3}', '${link}', '${language}', '${type}', 0, 0, '${status}' )`
         db.connection.query(query, (err, result) => {
             err ? res.send(err) : res.json({id: ID })
         })
@@ -84,7 +84,7 @@ function getEndIdController(req, res) {
 }
 function getBookAsTypeController(req, res) {
     const { keyword, catagory, language } = req.query
-    const query = `SELECT * FROM book WHERE type LIKE '${catagory}%'`;
+    const query = `SELECT * FROM book WHERE type LIKE '${catagory}%' AND status = 'true'`;
     db.connection.query(query, (err, result) => {
         err ? res.send(err) : res.json(result);
     })
@@ -92,7 +92,7 @@ function getBookAsTypeController(req, res) {
 
 function AdminSearchController(req, res) {
     const { keyword, language, catagory } = req.query
-    const query = `SELECT * FROM book WHERE Title LIKE '${keyword}%' AND type LIKE '${catagory}%' AND language LIKE '${language}%' OR Title LIKE '%${keyword}%' AND type LIKE '${catagory}%' AND language LIKE '${language}%' `
+    const query = `SELECT * FROM book WHERE Title LIKE '${keyword}%' AND type LIKE '${catagory}%' AND language LIKE '${language}%' AND status = 'true' OR Title LIKE '%${keyword}%' AND type LIKE '${catagory}%' AND language LIKE '${language}%' AND status = 'true' `
     db.connection.query(query, (err, result) => {
         err ? res.json(err) : res.json(result)
     })
@@ -162,13 +162,13 @@ function ReadPDF(req, res) {
 }
 
 function GetMostViewController(req, res){
-    const query = `SELECT * FROM book ORDER BY view DESC LIMIT 10`
+    const query = `SELECT * FROM book WHERE status = 'true' ORDER BY view DESC LIMIT 10`
     db.connection.query(query, (err, result) => {
         err ? res.json({message: err}) : res.json(result)
     })
 }
 function GetMostDownloadController(req, res){
-    const query = `SELECT * FROM book ORDER BY download DESC LIMIT 10`
+    const query = `SELECT * FROM book WHERE status = 'true' ORDER BY download DESC LIMIT 10`
     db.connection.query(query, (err, result) => {
         err ? res.json({message: err}) : res.json(result)
     })
