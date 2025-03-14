@@ -13,7 +13,7 @@ function GetBookUserRequested(req, res){
     const {id} = req.query
     const query = `SELECT * FROM book WHERE id = '${id}'`
     db.connection.query(query, (err, result) => {
-        err ? res.json({message: "no found"}) : res.json(result) 
+        err ? res.json({message: "no found"}) : res.json(id) 
     })
 }
 
