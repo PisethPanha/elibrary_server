@@ -3,7 +3,7 @@ const path = require("path");
 
 function Get_all_book_controller(req, res) {
     const { offset, limit, language } = req.query
-    const query = `SELECT * FROM book WHERE language LIKE '${language}%' ORDER BY id DESC LIMIT ${limit} OFFSET ${offset}`;
+    const query = `SELECT * FROM book WHERE language LIKE '${language}%' AND status = 'true' ORDER BY id DESC LIMIT ${limit} OFFSET ${offset}`;
     db.connection.query(query, (err, result) => {
         err ? res.send(err) : res.json(result);
     })
