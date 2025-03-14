@@ -10,6 +10,9 @@ function Getbook(app) {
 function Get_book_as_lang(app) {
     app.get("/getbookastype", getbook_controller.Get_book_as_lang_controller)
 }
+function GetBookUserRequestedRoute(app){
+    app.get("/book-requested", getbook_controller.GetBookUserRequested);
+}
 function deleteRoute(app) {
     app.get("/delete", getbook_controller.deleteController)
 }
@@ -124,4 +127,4 @@ function GetMostViewRoute(app){
 function GetMostDownloadRoute(app){
     app.get("/most-download", getbook_controller.GetMostViewController)
 }
-module.exports = { GetMostDownloadRoute, GetMostViewRoute, uploadPDFTestRoute, uploadPDFRoute, ReadPDFRoute, ProtectRouteAdminRoute, AdminLoginRoute, ChangeDownloadLinkRoute, AddDownloadRoute, AddViewRoute, AdminSearchRoute, GetBookAsTypeRoute, GetBookAsKeywordRoute, GetBookSearchRoute, getEndIdRoute, AddBookRoute, Getbook, Get_book_as_lang, deleteRoute, EditRoute }
+module.exports = { GetBookUserRequestedRoute, GetMostDownloadRoute, GetMostViewRoute, uploadPDFTestRoute, uploadPDFRoute, ReadPDFRoute, ProtectRouteAdminRoute, AdminLoginRoute, ChangeDownloadLinkRoute, AddDownloadRoute, AddViewRoute, AdminSearchRoute, GetBookAsTypeRoute, GetBookAsKeywordRoute, GetBookSearchRoute, getEndIdRoute, AddBookRoute, Getbook, Get_book_as_lang, deleteRoute, EditRoute }
