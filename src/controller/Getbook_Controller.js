@@ -79,14 +79,14 @@ function AddBookController(req, res) {
     const { status, type, title, description, link, author, publisher, image1, image2, image3, language, date } = req.body
 
     let ID = 0;
-    const queryLastId = 'SELECT id FROM book ORDER BY id DESC LIMIT 1';
+    const queryLastId = `SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'railway' AND TABLE_NAME = 'book';`;
     db.connection.query(queryLastId, (err, result) => {
         err ? res.send(err) : ID = result[0].id
 
         const query = `INSERT INTO book ( Title, describetion, autor, publisher, publish_date, img, img_content1, img_content2, img_content3,  link_download, language, type, view, download, status ) 
         VALUES ( '${title}','${description}', '${author}', '${publisher}', '${date}', '${ID + 1}${image1}', '${ID+1 + image1}', '${ID+1 + image2}', '${ID+1 + image3}', '${link}', '${language}', '${type}', 0, 0, '${status}' )`
         db.connection.query(query, (err, result) => {
-            err ? res.send(err) : res.json({id: ID })
+            err ? res.send(err) : res.json({id: ID-1 })
         })
     })
 
