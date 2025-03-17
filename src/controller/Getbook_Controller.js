@@ -9,20 +9,20 @@ function Get_all_book_controller(req, res) {
     })
 }
 
-function GetBookUserRequested(req, res){
-    const {id} = req.query
+function GetBookUserRequested(req, res) {
+    const { id } = req.query
     const query = `SELECT * FROM book WHERE id = '${id}'`
     db.connection.query(query, (err, result) => {
-        err ? res.json({message: "no found"}) : res.json(result) 
+        err ? res.json({ message: "no found" }) : res.json(result)
     })
 }
 
-function handleApprovalController(req,res){
-    const {id} = req.query
+function handleApprovalController(req, res) {
+    const { id } = req.query
     const query = `UPDATE book SET status = 'true' WHERE id = ${id} `
-    db.connection.query(query, (err, result) =>{
-        err ? res.json({message: err}) : res.json({message: "approved"})
-    } )
+    db.connection.query(query, (err, result) => {
+        err ? res.json({ message: err }) : res.json({ message: "approved" })
+    })
 }
 
 function Get_book_search_controller(req, res) {
@@ -80,18 +80,23 @@ function AddBookController(req, res) {
 
     let ID = 0;
     const queryLastId = 'UPDATE auto_increase SET auto_increment = auto_increment + 1 WHERE id = 1';
-    
+
     db.connection.query(queryLastId, (err, result) => {
-        err ? res.send(err) : 
-        db.connection.query(` SELECT auto_increment FROM auto_increase WHERE id = 1 `,(err, result) => {
-            err ? res.json({message: err}) : ID = result[0].auto_increment
-        })
-        
-        const query = `INSERT INTO book ( Title, describetion, autor, publisher, publish_date, img, img_content1, img_content2, img_content3,  link_download, language, type, view, download, status ) 
-        VALUES ( '${title}','${description}', '${author}', '${publisher}', '${date}', '${ID + 1}${image1}', '${ID+1 + image1}', '${ID+1 + image2}', '${ID+1 + image3}', '${link}', '${language}', '${type}', 0, 0, '${status}' )`
-        db.connection.query(query, (err, result) => {
-            err ? res.send(err) : res.json({id: ID })
-        })
+        err ? res.send(err) :
+            db.connection.query(` SELECT auto_increment FROM auto_increase WHERE id = 1 `, (err, result) => {
+
+                if (err) {
+                    res.json({ message: err })
+                } else {
+                    const query = `INSERT INTO book ( Title, describetion, autor, publisher, publish_date, img, img_content1, img_content2, img_content3,  link_download, language, type, view, download, status ) VALUES ( '${title}','${description}', '${author}', '${publisher}', '${date}', '${result[0].auto_increment + 1}${image1}', '${result[0].auto_increment + 1 + image1}', '${result[0].auto_increment + 1 + image2}', '${result[0].auto_increment + 1 + image3}', '${link}', '${language}', '${type}', 0, 0, '${status}' )`
+                    db.connection.query(query, (err, result) => {
+                        err ? res.send(err) : res.json({ id: result[0].auto_increment })
+                    })
+                }
+
+            })
+
+
     })
 
 }
@@ -182,16 +187,16 @@ function ReadPDF(req, res) {
     });
 }
 
-function GetMostViewController(req, res){
+function GetMostViewController(req, res) {
     const query = `SELECT * FROM book WHERE status = 'true' ORDER BY view DESC LIMIT 10`
     db.connection.query(query, (err, result) => {
-        err ? res.json({message: err}) : res.json(result)
+        err ? res.json({ message: err }) : res.json(result)
     })
 }
-function GetMostDownloadController(req, res){
+function GetMostDownloadController(req, res) {
     const query = `SELECT * FROM book WHERE status = 'true' ORDER BY download DESC LIMIT 10`
     db.connection.query(query, (err, result) => {
-        err ? res.json({message: err}) : res.json(result)
+        err ? res.json({ message: err }) : res.json(result)
     })
 }
 
