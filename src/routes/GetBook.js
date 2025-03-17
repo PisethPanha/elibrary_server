@@ -56,7 +56,7 @@ function ReadPDFRoute(app) {
     app.get("/pdf/:filename", getbook_controller.ReadPDF)
 }
 function handleApprovalRoute(app){
-    app.get("approval", getbook_controller.handleApprovalController)
+    app.get("/approval", getbook_controller.handleApprovalController)
 }
 
 
