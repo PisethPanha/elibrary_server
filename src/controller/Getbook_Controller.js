@@ -86,11 +86,10 @@ function AddBookController(req, res) {
         db.connection.query(` SELECT auto_increment FROM auto_increase WHERE id = 1 `,(err, result) => {
             err ? res.json({message: err}) : ID = result[0].auto_increment
             const query = `INSERT INTO book ( Title, describetion, autor, publisher, publish_date, img, img_content1, img_content2, img_content3,  link_download, language, type, view, download, status ) 
-            VALUES ( '${title}','${description}', '${author}', '${publisher}', '${date}', '${ID + 1}${image1}', '${ID+1 + image1}', '${ID+1 + image2}', '${ID+1 + image3}', '${link}', '${language}', '${type}', 0, 0, '${status}' )`
+            VALUES ( '${title}','${description}', '${author}', '${publisher}', '${date}', '${ID}${image1}', '${ID + image1}', '${ID + image2}', '${ID + image3}', '${link}', '${language}', '${type}', 0, 0, '${status}' )`
             db.connection.query(query, (err, result) => {
                 err ? res.send(err) : res.json({id: ID })
                 console.log(ID);
-                
             })
         })
         
