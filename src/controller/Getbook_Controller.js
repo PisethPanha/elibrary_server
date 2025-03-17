@@ -85,15 +85,15 @@ function AddBookController(req, res) {
         err ? res.send(err) : 
         db.connection.query(` SELECT auto_increment FROM auto_increase WHERE id = 1 `,(err, result) => {
             err ? res.json({message: err}) : ID = result[0].auto_increment
+            const query = `INSERT INTO book ( Title, describetion, autor, publisher, publish_date, img, img_content1, img_content2, img_content3,  link_download, language, type, view, download, status ) 
+            VALUES ( '${title}','${description}', '${author}', '${publisher}', '${date}', '${ID + 1}${image1}', '${ID+1 + image1}', '${ID+1 + image2}', '${ID+1 + image3}', '${link}', '${language}', '${type}', 0, 0, '${status}' )`
+            db.connection.query(query, (err, result) => {
+                err ? res.send(err) : res.json({id: ID })
+                console.log(ID);
+                
+            })
         })
         
-        const query = `INSERT INTO book ( Title, describetion, autor, publisher, publish_date, img, img_content1, img_content2, img_content3,  link_download, language, type, view, download, status ) 
-        VALUES ( '${title}','${description}', '${author}', '${publisher}', '${date}', '${ID + 1}${image1}', '${ID+1 + image1}', '${ID+1 + image2}', '${ID+1 + image3}', '${link}', '${language}', '${type}', 0, 0, '${status}' )`
-        db.connection.query(query, (err, result) => {
-            err ? res.send(err) : res.json({id: ID })
-            console.log(ID);
-            
-        })
     })
 
 }
@@ -111,6 +111,14 @@ function getBookAsTypeController(req, res) {
     db.connection.query(query, (err, result) => {
         err ? res.send(err) : res.json(result);
     })
+}
+
+function testGetID(req,res){
+    let ID = 0;
+    db.connection.query(` SELECT auto_increment FROM auto_increase WHERE id = 1 `,(err, result) => {
+        err ? res.json({message: err}) : ID = result[0].auto_increment
+    })
+    console.log(ID);
 }
 
 function AdminSearchController(req, res) {
@@ -197,4 +205,4 @@ function GetMostDownloadController(req, res){
     })
 }
 
-module.exports = { handleApprovalController, GetBookUserRequested, GetMostDownloadController, GetMostViewController, ReadPDF, ProtectRouteAdminController, AdminLoginController, ChangeDownloadLinkController, AddDownloadController, AddViewController, AdminSearchController, Get_book_as_type_controller, getBookAsTypeController, Get_book_as_keyword_controller, Get_book_search_controller, getEndIdController, AddBookController, EditController, Get_all_book_controller, Get_book_as_lang_controller, deleteController }
+module.exports = { testGetID, handleApprovalController, GetBookUserRequested, GetMostDownloadController, GetMostViewController, ReadPDF, ProtectRouteAdminController, AdminLoginController, ChangeDownloadLinkController, AddDownloadController, AddViewController, AdminSearchController, Get_book_as_type_controller, getBookAsTypeController, Get_book_as_keyword_controller, Get_book_search_controller, getEndIdController, AddBookController, EditController, Get_all_book_controller, Get_book_as_lang_controller, deleteController }
