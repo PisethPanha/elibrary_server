@@ -55,6 +55,9 @@ function ProtectRouteAdminRoute(app) {
 function ReadPDFRoute(app) {
     app.get("/pdf/:filename", getbook_controller.ReadPDF)
 }
+function handleApprovalRoute(app){
+    app.get("approval", getbook_controller.handleApprovalController)
+}
 
 
 const storage = multer.memoryStorage()
@@ -127,4 +130,4 @@ function GetMostViewRoute(app){
 function GetMostDownloadRoute(app){
     app.get("/most-download", getbook_controller.GetMostViewController)
 }
-module.exports = { GetBookUserRequestedRoute, GetMostDownloadRoute, GetMostViewRoute, uploadPDFTestRoute, uploadPDFRoute, ReadPDFRoute, ProtectRouteAdminRoute, AdminLoginRoute, ChangeDownloadLinkRoute, AddDownloadRoute, AddViewRoute, AdminSearchRoute, GetBookAsTypeRoute, GetBookAsKeywordRoute, GetBookSearchRoute, getEndIdRoute, AddBookRoute, Getbook, Get_book_as_lang, deleteRoute, EditRoute }
+module.exports = { handleApprovalRoute, GetBookUserRequestedRoute, GetMostDownloadRoute, GetMostViewRoute, uploadPDFTestRoute, uploadPDFRoute, ReadPDFRoute, ProtectRouteAdminRoute, AdminLoginRoute, ChangeDownloadLinkRoute, AddDownloadRoute, AddViewRoute, AdminSearchRoute, GetBookAsTypeRoute, GetBookAsKeywordRoute, GetBookSearchRoute, getEndIdRoute, AddBookRoute, Getbook, Get_book_as_lang, deleteRoute, EditRoute }

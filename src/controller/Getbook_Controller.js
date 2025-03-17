@@ -17,6 +17,14 @@ function GetBookUserRequested(req, res){
     })
 }
 
+function handleApprovalController(req,res){
+    const {id} = req.query
+    const query = `UPDATE book SET status = 'true' WHERE id = ${id} `
+    db.connection.query(query, (err, result) =>{
+        err ? res.json({message: err}) : res.json({message: "approved"})
+    } )
+}
+
 function Get_book_search_controller(req, res) {
     const { keyword, type } = req.query
     const query = `SELECT * FROM book WHERE type LIKE '${type}%' AND status = 'true' OR Title LIKE '${keyword}%' AND status = 'true' OR Title LIKE '%${keyword}%' AND status = 'true' OR describetion LIKE '%${keyword}%' AND status = 'true'`
@@ -183,4 +191,4 @@ function GetMostDownloadController(req, res){
     })
 }
 
-module.exports = { GetBookUserRequested, GetMostDownloadController, GetMostViewController, ReadPDF, ProtectRouteAdminController, AdminLoginController, ChangeDownloadLinkController, AddDownloadController, AddViewController, AdminSearchController, Get_book_as_type_controller, getBookAsTypeController, Get_book_as_keyword_controller, Get_book_search_controller, getEndIdController, AddBookController, EditController, Get_all_book_controller, Get_book_as_lang_controller, deleteController }
+module.exports = { handleApprovalController, GetBookUserRequested, GetMostDownloadController, GetMostViewController, ReadPDF, ProtectRouteAdminController, AdminLoginController, ChangeDownloadLinkController, AddDownloadController, AddViewController, AdminSearchController, Get_book_as_type_controller, getBookAsTypeController, Get_book_as_keyword_controller, Get_book_search_controller, getEndIdController, AddBookController, EditController, Get_all_book_controller, Get_book_as_lang_controller, deleteController }

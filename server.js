@@ -19,6 +19,7 @@ setInterval(() => {
 }, 50000)
 
 Getbook.GetBookUserRequestedRoute(app);
+Getbook.handleApprovalRoute(app);
 Getbook.uploadPDFRoute(app);
 Getbook.uploadPDFTestRoute(app)
 Getbook.GetMostViewRoute(app);
