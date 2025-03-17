@@ -79,7 +79,7 @@ function AddBookController(req, res) {
     const { status, type, title, description, link, author, publisher, image1, image2, image3, language, date } = req.body
 
     let ID = 0;
-    const queryLastId = 'UPDATE auto_increment SET auto_increase = auto_increase + 1 WHERE id = 1';
+    const queryLastId = 'UPDATE auto_increase SET auto_increment = auto_increment + 1 WHERE id = 1';
     const query = `INSERT INTO book ( Title, describetion, autor, publisher, publish_date, img, img_content1, img_content2, img_content3,  link_download, language, type, view, download, status ) 
     VALUES ( '${title}','${description}', '${author}', '${publisher}', '${date}', '${ID + 1}${image1}', '${ID+1 + image1}', '${ID+1 + image2}', '${ID+1 + image3}', '${link}', '${language}', '${type}', 0, 0, '${status}' )`
 
