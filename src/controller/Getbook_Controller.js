@@ -85,7 +85,7 @@ function AddBookController(req, res) {
 
     db.connection.query(queryLastId, (err, result) => {
         err ? res.send(err) : 
-        db.connection.query(` SELECT auto_increment FROM auto_increase `,(err, result) => {
+        db.connection.query(` SELECT auto_increment FROM auto_increase WHERE id = 1 `,(err, result) => {
             err ? res.json({message: err}) : ID = result[0].auto_increase
         })
 
