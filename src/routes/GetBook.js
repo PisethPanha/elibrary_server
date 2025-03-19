@@ -128,7 +128,7 @@ function GetMostViewRoute(app){
     app.get("/most-view", getbook_controller.GetMostViewController)
 }
 function GetMostDownloadRoute(app){
-    app.get("/most-download", getbook_controller.GetMostViewController)
+    app.get("/most-download", getbook_controller.GetMostDownloadController)
 }
 function testGetIDRoute(app){
     app.get("/testID", getbook_controller.testGetID)
