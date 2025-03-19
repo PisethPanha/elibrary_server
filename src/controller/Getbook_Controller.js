@@ -102,7 +102,7 @@ function getUserRequestItems(req, res){
     const placeholder = items.map((ele, i) => `${ele}`).join(",")
     const query = `SELECT * FROM book WHERE id IN ( 328, 329, 330, 331 )`
     db.connection.query(query, (err, result) => {
-        err ? res.json({message: err}) : res.json(items)
+        err ? res.json({message: err}) : res.json(result)
     })
 }
 
