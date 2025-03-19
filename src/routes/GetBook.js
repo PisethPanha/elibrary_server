@@ -134,6 +134,6 @@ function testGetIDRoute(app){
     app.get("/testID", getbook_controller.testGetID)
 }
 function getUserRequestItemsController(app){
-    app.get("/get-user-book-request", getbook_controller.GetBookUserRequested)
+    app.get("/get-user-book-request", getbook_controller.getUserRequestItems)
 }
 module.exports = { getUserRequestItemsController, testGetIDRoute, handleApprovalRoute, GetBookUserRequestedRoute, GetMostDownloadRoute, GetMostViewRoute, uploadPDFTestRoute, uploadPDFRoute, ReadPDFRoute, ProtectRouteAdminRoute, AdminLoginRoute, ChangeDownloadLinkRoute, AddDownloadRoute, AddViewRoute, AdminSearchRoute, GetBookAsTypeRoute, GetBookAsKeywordRoute, GetBookSearchRoute, getEndIdRoute, AddBookRoute, Getbook, Get_book_as_lang, deleteRoute, EditRoute }

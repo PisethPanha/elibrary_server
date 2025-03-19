@@ -100,7 +100,7 @@ function AddBookController(req, res) {
 function getUserRequestItems(req, res){
     const { items } = req.query
     const placeholder = items.map((ele, i) => `${ele}`).join(",")
-    const query = `SELECT * FROM book WHERE id IN ( 328, 329, 330, 331 )`
+    const query = `SELECT * FROM book WHERE id IN (${placeholder})`
     db.connection.query(query, (err, result) => {
         err ? res.json({message: err}) : res.json(result)
     })
