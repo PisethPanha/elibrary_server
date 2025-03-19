@@ -133,4 +133,7 @@ function GetMostDownloadRoute(app){
 function testGetIDRoute(app){
     app.get("/testID", getbook_controller.testGetID)
 }
-module.exports = { testGetIDRoute, handleApprovalRoute, GetBookUserRequestedRoute, GetMostDownloadRoute, GetMostViewRoute, uploadPDFTestRoute, uploadPDFRoute, ReadPDFRoute, ProtectRouteAdminRoute, AdminLoginRoute, ChangeDownloadLinkRoute, AddDownloadRoute, AddViewRoute, AdminSearchRoute, GetBookAsTypeRoute, GetBookAsKeywordRoute, GetBookSearchRoute, getEndIdRoute, AddBookRoute, Getbook, Get_book_as_lang, deleteRoute, EditRoute }
+function getUserRequestItemsController(app){
+    app.get("/get-user-book-request", getbook_controller.GetBookUserRequested)
+}
+module.exports = { getUserRequestItemsController, testGetIDRoute, handleApprovalRoute, GetBookUserRequestedRoute, GetMostDownloadRoute, GetMostViewRoute, uploadPDFTestRoute, uploadPDFRoute, ReadPDFRoute, ProtectRouteAdminRoute, AdminLoginRoute, ChangeDownloadLinkRoute, AddDownloadRoute, AddViewRoute, AdminSearchRoute, GetBookAsTypeRoute, GetBookAsKeywordRoute, GetBookSearchRoute, getEndIdRoute, AddBookRoute, Getbook, Get_book_as_lang, deleteRoute, EditRoute }

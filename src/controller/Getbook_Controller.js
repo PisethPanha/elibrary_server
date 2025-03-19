@@ -97,6 +97,15 @@ function AddBookController(req, res) {
 
 }
 
+function getUserRequestItems(req, res){
+    const { items } = req.query
+    const placeholder = items.map((ele, i) => `${ele}`).join(",")
+    const query = `SELECT * FROM book WHERE id IN ( ${placeholder} )`
+    db.connection.query(query, (err, result) => {
+        err ? res.json({message: err}) : res.json(result)
+    })
+}
+
 function getEndIdController(req, res) {
     let ID = 0;
     const queryLastId = 'SELECT id FROM book ORDER BY id DESC LIMIT 1';
@@ -204,4 +213,4 @@ function GetMostDownloadController(req, res){
     })
 }
 
-module.exports = { testGetID, handleApprovalController, GetBookUserRequested, GetMostDownloadController, GetMostViewController, ReadPDF, ProtectRouteAdminController, AdminLoginController, ChangeDownloadLinkController, AddDownloadController, AddViewController, AdminSearchController, Get_book_as_type_controller, getBookAsTypeController, Get_book_as_keyword_controller, Get_book_search_controller, getEndIdController, AddBookController, EditController, Get_all_book_controller, Get_book_as_lang_controller, deleteController }
+module.exports = { getUserRequestItems, testGetID, handleApprovalController, GetBookUserRequested, GetMostDownloadController, GetMostViewController, ReadPDF, ProtectRouteAdminController, AdminLoginController, ChangeDownloadLinkController, AddDownloadController, AddViewController, AdminSearchController, Get_book_as_type_controller, getBookAsTypeController, Get_book_as_keyword_controller, Get_book_search_controller, getEndIdController, AddBookController, EditController, Get_all_book_controller, Get_book_as_lang_controller, deleteController }
